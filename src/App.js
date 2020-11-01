@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import "./App.css";
+import adminForm from "./components/adminForm";
+import Info from "./components/infoSection";
+import Main from "./components/mainSection";
+import studentEditForm from "./components/form";
+import StudentInfo from "./components/studentSection";
+import studentForm from "./components/StudentForm";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Route path="/" exact component={Main} />
+      <Route path="/info/:studentid" exact component={Info} />
+      <Route path="/info/:studentid/edit" exact component={studentEditForm} />
+      <Route path="/loginas/admin" exact component={adminForm} />
+      <Route path="/addstudent/admin" exact component={studentForm} />
+      <Route path="/studentinfo/admin" exact component={StudentInfo} />
+    </BrowserRouter>
   );
 }
 
