@@ -7,6 +7,7 @@ import Main from "./components/mainSection";
 import studentEditForm from "./components/form";
 import StudentInfo from "./components/studentSection";
 import studentForm from "./components/StudentForm";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {

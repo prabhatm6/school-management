@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
 import { connect } from "react-redux";
-import { Redirect, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   fetchStudents,
   logout,
@@ -42,6 +41,7 @@ import {
   DocSaveBtn,
   DocHeader,
 } from "./infoElements";
+import Loader from '../../components/loading';
 
 const Info = ({
   info,
@@ -213,7 +213,7 @@ const Info = ({
             ) : null}
           </InfoBox>
         </InfoContainer>
-      ) : null}
+      ) : <Loader />}
     </div>
   );
 };

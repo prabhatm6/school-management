@@ -120,7 +120,7 @@ const Main = ({ signin, history, setLoading, isLoading }) => {
                   {isLoading ? (
                     <PulseLoader
                       css={override}
-                      size={23}
+                      size={21}
                       color="blue"
                       loading={isLoading}
                     />

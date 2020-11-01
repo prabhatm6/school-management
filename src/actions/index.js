@@ -2,9 +2,33 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookies";
 
-// toast.configure();
+toast.configure();
 // const baseUrl = "http://localhost:5000";
+
 const baseUrl = "https://schoolbackend-data-entry.herokuapp.com";
+
+const noticeSuccess = (text) => {
+  return toast.success(text, {
+    position: "top-center",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+const noticeError = (text) => {
+  return toast.error(text, {
+    position: "top-center",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 export const setLoading = (state) => {
   return {
@@ -22,6 +46,7 @@ export const signin = (data, callback) => {
         Cookies.setItem("token", res.data.token, "10");
         if (res.data.status === "success") {
           dispatch({ type: "auth", paylaod: res.data });
+          noticeSuccess("Successfully logged in");
           setTimeout(() => {
             dispatch({ type: "set_loading", payload: false });
             callback(res.data.data._id);
@@ -32,7 +57,8 @@ export const signin = (data, callback) => {
       setTimeout(() => {
         dispatch({ type: "set_loading", payload: false });
       }, 2000);
-      console.log(error.response);
+      const err = error.response.data.message;
+      noticeError(err);
     }
   };
 };
@@ -43,8 +69,8 @@ export const signinAsAdmin = (data, callback) => {
       console.log(res.data);
       if (res.data.status === "success") {
         localStorage.setItem("id", res.data.data._id);
-        alert("success");
         Cookies.setItem("Admintoken", res.data.token, "10d", "/");
+        noticeSuccess("Successfully logged in");
         dispatch({ type: "admin_auth", paylaod: res.data.data });
         setTimeout(() => {
           dispatch({ type: "set_loading", payload: false });
@@ -55,7 +81,8 @@ export const signinAsAdmin = (data, callback) => {
       setTimeout(() => {
         dispatch({ type: "set_loading", payload: false });
       }, 2000);
-      console.log(error.response);
+      const err = error.response.data.message;
+      noticeError(err);
     }
   };
 };
@@ -83,10 +110,12 @@ export const addStudent = (data, token) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(`${baseUrl}/createstudent/${token}`, data);
-      console.log(res.data);
       dispatch({ type: "fetched_student", payload: res.data.data });
+
+      noticeSuccess("new student is added");
     } catch (error) {
-      console.log(error.response);
+      const err = error.response.data.message;
+      noticeError(err);
     }
   };
 };
@@ -97,10 +126,11 @@ export const editStudent = (id, data, token) => {
         `${baseUrl}/updatestudent/${id}/${token}`,
         data
       );
-      console.log(res.data);
       dispatch({ type: "edit_student", payload: res.data.student });
+      noticeSuccess("student is edited");
     } catch (error) {
-      console.log(error.response);
+      const err = error.response.data.message;
+      noticeError(err);
     }
   };
 };
@@ -111,10 +141,11 @@ export const uploadDocs = (id, data, token) => {
         `${baseUrl}/upload/docs/${id}/${token}`,
         data
       );
-      console.log(res.data);
       dispatch({ type: "fetched_student", payload: res.data.student });
+      noticeSuccess("document is uploaded");
     } catch (error) {
-      console.log(error.response);
+      const err = error.response.data.message;
+      noticeError(err);
     }
   };
 };
@@ -125,33 +156,35 @@ export const uploadProfile = (id, data, token) => {
         `${baseUrl}/upload/dp/${id}/${token}`,
         data
       );
-      console.log(res.data);
       dispatch({ type: "fetched_student", payload: res.data.student });
     } catch (error) {
-      console.log(error.response);
+      noticeError("something went wrong");
     }
   };
 };
 export const logout = () => {
-  return async (dispatch) => {
-    try {
-      Cookies.removeItem("token");
-      localStorage.removeItem("id");
-      dispatch({ type: "logout", payload: null });
-    } catch (error) {
-      console.log(error.response);
-    }
+  Cookies.removeItem("token");
+  localStorage.removeItem("id");
+
+  setTimeout(() => {
+    noticeSuccess("Logged out");
+  }, 1000);
+
+  return {
+    type: "logout",
+    payload: null,
   };
 };
 export const logoutAdmin = (callback) => {
-  return async (dispatch) => {
-    try {
-      Cookies.removeItem("Admintoken", "/");
-      localStorage.removeItem("id");
-      callback();
-      dispatch({ type: "logout", payload: null });
-    } catch (error) {
-      console.log(error.response);
-    }
+  Cookies.removeItem("Admintoken", "/");
+  localStorage.removeItem("id");
+  callback();
+  setTimeout(() => {
+    noticeSuccess("Logged out");
+  }, 1000);
+
+  return {
+    type: "logout",
+    payload: null,
   };
 };

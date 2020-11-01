@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookies";
 import { connect } from "react-redux";
 import { fetchAllStudents, logoutAdmin } from "../../actions";
-import { Link } from "react-router-dom";
+import Loader from "../../components/loading";
+
 import {
   DashboardBox,
   DashboardContainer,
@@ -40,13 +41,19 @@ const StudentInfo = ({ history, logoutAdmin, fetchAllStudents, students }) => {
   const renderStudent = () => {
     if (filterStudent().length === 0) {
       return <p>No Data..😞</p>;
-    } else if (filterStudent()[0]) {
+    } else if (name) {
       return filterStudent().map((student) => {
         return (
           <>
             <Student to={`/info/${student._id}`}>
               <DataProfile>
-                <StudentProfile src="https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg" />
+                <StudentProfile
+                  src={
+                    student.profilePhoto
+                      ? student.profilePhoto
+                      : "https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg"
+                  }
+                />
                 <DataP>{student.name}</DataP>
               </DataProfile>
               <DataSource>
@@ -111,7 +118,9 @@ const StudentInfo = ({ history, logoutAdmin, fetchAllStudents, students }) => {
             {renderStudent()}
           </StudentData>
         </DashboardBox>
-      ) : null}
+      ) : (
+        <Loader />
+      )}
     </DashboardContainer>
   );
 };

@@ -4,6 +4,7 @@ import Form from "./studentEditForm";
 import { useParams } from "react-router-dom";
 import { fetchStudents, editStudent } from "../actions";
 import Cookies from "js-cookies";
+import Loader from "./loading";
 
 const StudentEditForm = ({ fetchStudents, history, student, editStudent }) => {
   const studentId = useParams().studentid;
@@ -41,7 +42,9 @@ const StudentEditForm = ({ fetchStudents, history, student, editStudent }) => {
             addressStreet: student.addressStreet,
           }}
         />
-      ) : null}
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };
